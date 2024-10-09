@@ -7,14 +7,6 @@ import os
 OPENAI_API_KEY = st.secrets['API_KEY']
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-import base64
-
-# Función para convertir el archivo de audio a base64
-def get_audio_base64(audio_file):
-    with open(audio_file, "rb") as f:
-        audio_bytes = f.read()
-    return base64.b64encode(audio_bytes).decode()
-
 # Función para convertir audio a texto
 def audio_to_text(path):
     with open(path, "rb") as audio_file:
@@ -128,18 +120,7 @@ def main():
             with st.spinner("Convirtiendo la respuesta a audio..."):
                 audio_file = text_to_audio(response)
 
-            # Convierte el audio a base64
-            audio_base64 = get_audio_base64(audio_file)
-
-            # Crea la etiqueta HTML para reproducir el audio automáticamente
-            audio_html = f"""
-                <audio autoplay>
-                    <source src="data:audio/mpeg;base64,{audio_base64}" type="audio/mp3">
-                </audio>
-            """
-
-            # Muestra el audio usando HTML y lo reproduce automáticamente
-            st.markdown(audio_html, unsafe_allow_html=True)
+            st.audio(audio_file, format="audio/mp3", autoplay=True)
 
             # Elimina el archivo temporal de audio
             if os.path.exists(audio_file):
