@@ -104,9 +104,11 @@ def main():
             try:
                 # Transcribe el audio
                 with st.spinner("Transcribiendo el audio..."):
-                    question = audio_to_text(path)
-                    # st.write(f"Pregunta hecha: {question}")
-                    st.session_state.messages.append({"role": "user", "content": question})
+                    try:
+                        question = audio_to_text(path)
+                        st.session_state.messages.append({"role": "user", "content": question})  # Agregar el mensaje del usuario al historial
+                    except:
+                        st.error('No se pudo escuchar tu mensaje! \n Intenta hacer click en el micrófono, hablar cuando se ponga color rojo y, cuando dejes de hablar, automáticamente se procesará tu pregunta', icon="🚨")
             finally:
                 if os.path.exists(path):
                     os.remove(path)
